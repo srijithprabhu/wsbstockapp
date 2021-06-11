@@ -69,27 +69,6 @@ func getShortInterest() []ShortInterestData {
 	return shortsData
 }
 
-func getMatchingRegex(data ShortInterestData) *regexp.Regexp {
-	result := regexp.MustCompile(fmt.Sprintf(`(?i)\b(?:%s|%s)\b`, data.Symbol, data.Name))
-	return result
-}
-
-func findShortsInWSB(data []ShortInterestData) map[string][]string {
-	result := make(map[string][]string)
-	// matchingRegexes := getMatchingRegexes(data)
-
-	return result
-}
-
-func getMatchingRegexes(data []ShortInterestData) []*regexp.Regexp {
-	var result []*regexp.Regexp
-	for _, element := range data {
-		regex := getMatchingRegex(element)
-		result = append(result, regex)
-	}
-	return result
-}
-// {"access_token": "18056296-dE8dyX3W7oTEmtCARM5xkK1ifhoyow", "token_type": "bearer", "expires_in": 3600, "scope": "*"}
 type RedditAuthResponse struct {
 	AccessToken string `json:"access_token"`
 	TokenType string `json:"token_type"`
@@ -136,21 +115,108 @@ func getRedditHttpClient() *http.Client {
 	return client
 }
 
-func getWallStreetBets() []string {
-	result := make([]string, 0)
+type RedditRootNode struct {
+	Kind string `json:"kind"`
+	Data RedditDataNode `json:"data"`
+}
+
+type RedditDataNode struct {
+	Modhash string `json:"modhash"`
+	Dist int32 `json:"dist"`
+	After string `json:"after"`
+	Before string `json:"before"`
+	Children []RedditChildNode `json:"children"`
+}
+
+type RedditChildNode struct {
+	Kind string `json:"kind"`
+	Data RedditChildDataNode `json:"data"`
+}
+
+type RedditChildDataNode struct {
+	Subreddit string `json:"subreddit"`
+	Selftext string `json:"selftext"`
+	AuthorFullname string `json:"author_fullname"`
+	ModReasonTitle string `json:"mod_reason_title"`
+	Title string `json:"title"`
+	Ups uint32 `json:"ups"`
+	Downs uint32 `json:"downs"`
+	TotalAwardsReceived uint32 `json:"total_awards_received"`
+	Score uint32 `json:"score"`
+	SelftextHtml string `json:"selftext_html"`
+	Url string `json:"url"`
+	Unknown map[string]interface{} `json:"-"`
+}
+
+const LIMIT uint8 = 50
+
+func getWallStreetBets() []RedditChildNode {
 	client := getRedditHttpClient()
-	time.Sleep(5 * time.Second)
-	resp, _ := client.Get("https://oauth.reddit.com/r/wallstreetbets/hot")
+	// time.Sleep(5 * time.Second)
+	resp, _ := client.Get(fmt.Sprintf("https://oauth.reddit.com/r/wallstreetbets/hot?limit=%d", LIMIT))
 	body, _ := io.ReadAll(resp.Body)
-	log.Println(fmt.Sprintf("%s", body))
+	hotJson := &RedditRootNode{}
+	json.Unmarshal(body, hotJson)
+	return hotJson.Data.Children
+}
+
+type WsbStockResults struct {
+	MatchedShortUrls map[string][]string `json:"matched_short_urls"`
+	UnmatchedUrls []string `json:"unmatched_urls"`
+}
+
+func getHtmlTagRegex() *regexp.Regexp {
+	return regexp.MustCompile(`&lt;.+?&gt;`)
+}
+
+func removeHtmlTags(redditHtmlText string) string {
+	return getHtmlTagRegex().ReplaceAllString(redditHtmlText, "")
+}
+
+func findShortsInWSB(shortInterestData []ShortInterestData, wsbData []RedditChildNode) WsbStockResults {
+	result := WsbStockResults{
+		MatchedShortUrls: make(map[string][]string),
+		UnmatchedUrls: make([]string, 0),
+	}
+	matchingRegexes := getMatchingRegexes(shortInterestData)
+	for _, childNode := range wsbData {
+		atleastOne := false
+		childNodeData := childNode.Data
+		for index, regex := range matchingRegexes {
+			shortInterestStock := shortInterestData[index]
+			if regex.MatchString(childNodeData.Title) ||
+				regex.MatchString(removeHtmlTags(childNodeData.SelftextHtml)) ||
+				regex.MatchString(childNodeData.Selftext) ||
+				regex.MatchString(childNodeData.ModReasonTitle) {
+				result.MatchedShortUrls[shortInterestStock.Symbol] = append(result.MatchedShortUrls[shortInterestStock.Symbol], childNodeData.Url)
+				atleastOne = true
+			}
+		}
+		if (!atleastOne) {
+			result.UnmatchedUrls = append(result.UnmatchedUrls, childNodeData.Url)
+		}
+	}
+	return result
+}
+
+func getMatchingRegex(data ShortInterestData) *regexp.Regexp {
+	result := regexp.MustCompile(fmt.Sprintf(`(?i)\b(?:%s|%s)\b`, data.Symbol, data.Name))
+	return result
+}
+
+func getMatchingRegexes(data []ShortInterestData) []*regexp.Regexp {
+	var result []*regexp.Regexp
+	for _, element := range data {
+		regex := getMatchingRegex(element)
+		result = append(result, regex)
+	}
 	return result
 }
 
 func main() {
 	shortsData := getShortInterest()
 	wsbData := getWallStreetBets()
-	log.Println(shortsData)
-	log.Println(wsbData)
-	result := findShortsInWSB(shortsData)
-	log.Println(result)
+	result := findShortsInWSB(shortsData, wsbData)
+	prettyPrint, _ := json.MarshalIndent(result, "", "  ")
+	log.Println(fmt.Sprintf("%s", prettyPrint))
 }
