@@ -1,6 +1,6 @@
 # wsbstockapp
 
-NOTE: the code was written this way since I'm running the app on IBM Cloud, as can be seen from the [app.go Main method](./app.go#L304-L311).
+NOTE: the code was written this way since I'm running the app on IBM Cloud, as can be seen from the [app.go Main method](./app.go#L305-L312).
 
 ### Getting the necessary credentials for Reddit:
 Follow the directions at the [Reddit OAuth2 wiki](https://github.com/reddit-archive/reddit/wiki/OAuth2) to get the necessary credentials for the Reddit API.
