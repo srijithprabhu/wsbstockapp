@@ -1,4 +1,7 @@
 # wsbstockapp
+Just an app I wrote for some friends that calls wallstreetbets and highshortinterest.com to determine which stonks we might want to invest in for meme stonk gains.
+Can't guarantee any success from the stocks it provides, I have it send my friends and me a "newsletter" of which stocks are high interest short stocks,
+others that might be going to the moon, and just any other hot discussions we might be interested in. 💪🦍💎🙌🚀
 
 NOTE: the code was written this way since I'm running the app on IBM Cloud, as can be seen from the [app.go Main method](./app.go#L305-L312).
 
