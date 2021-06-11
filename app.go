@@ -189,19 +189,13 @@ func findShortsInWSB(shortInterestData []ShortInterestData, wsbData []RedditChil
 		summary := WsbSummary{childNodeData.Url, childNodeData.Title}
 		for index, regex := range matchingRegexes {
 			shortInterestStock := shortInterestData[index]
-			if regex.MatchString(childNodeData.Title) ||
-				regex.MatchString(removeHtmlTags(childNodeData.SelftextHtml)) ||
-				regex.MatchString(childNodeData.Selftext) ||
-				regex.MatchString(childNodeData.ModReasonTitle) {
+			if matchesRegex(regex, childNodeData) {
 				result.MatchedShortUrls[shortInterestStock.Symbol] = append(result.MatchedShortUrls[shortInterestStock.Symbol], summary)
 				atleastOne = true
 			}
 		}
 		if !atleastOne {
-			if interestingRegex.MatchString(childNodeData.Title) ||
-				interestingRegex.MatchString(removeHtmlTags(childNodeData.SelftextHtml)) ||
-				interestingRegex.MatchString(childNodeData.Selftext) ||
-				interestingRegex.MatchString(childNodeData.ModReasonTitle) {
+			if matchesRegex(interestingRegex, childNodeData) {
 				result.AdditionalInterestingUrls = append(result.AdditionalInterestingUrls, summary)
 			} else {
 				result.UnmatchedUrls = append(result.UnmatchedUrls, summary)
@@ -209,6 +203,13 @@ func findShortsInWSB(shortInterestData []ShortInterestData, wsbData []RedditChil
 		}
 	}
 	return result
+}
+
+func matchesRegex(regex *regexp.Regexp, childNodeData RedditChildDataNode) bool {
+	return regex.MatchString(childNodeData.Title) ||
+		regex.MatchString(removeHtmlTags(childNodeData.SelftextHtml)) ||
+		regex.MatchString(childNodeData.Selftext) ||
+		regex.MatchString(childNodeData.ModReasonTitle)
 }
 
 func getMatchingRegex(data ShortInterestData) *regexp.Regexp {
