@@ -75,7 +75,8 @@ type RedditAuthResponse struct {
 
 const HighShortInterestEndpoint = "https://www.highshortinterest.com/all/"
 const RedditAccessTokenEndpoint = "https://www.reddit.com/api/v1/access_token"
-const RedditWsbEndpoint = "https://oauth.reddit.com/r/wallstreetbets/hot"
+const RedditWsbEndpoint = "https://oauth.reddit.com/r/wallstreetbets/top"
+const RedditWsbTimeFilter string = "day"
 const RedditWsbResultLimit uint8 = 50
 
 func getRedditHttpClient(params map[string]interface{}) *http.Client {
@@ -150,7 +151,7 @@ type RedditChildDataNode struct {
 
 func getWallStreetBets(params map[string]interface{}) []RedditChildNode {
 	client := getRedditHttpClient(params)
-	resp, _ := client.Get(fmt.Sprintf("%s?limit=%d", RedditWsbEndpoint, RedditWsbResultLimit))
+	resp, _ := client.Get(fmt.Sprintf("%s?limit=%d&t=%s", RedditWsbEndpoint, RedditWsbResultLimit, RedditWsbTimeFilter))
 	body, _ := ioutil.ReadAll(resp.Body)
 	hotJson := &RedditRootNode{}
 	json.Unmarshal(body, hotJson)
