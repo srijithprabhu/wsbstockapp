@@ -8,6 +8,7 @@ import (
 	"net/smtp"
 	"net/url"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 )
@@ -140,8 +141,8 @@ type RedditChildDataNode struct {
 	AuthorFullname string `json:"author_fullname"`
 	ModReasonTitle string `json:"mod_reason_title"`
 	Title string `json:"title"`
-	Ups uint32 `json:"ups"`
-	Downs uint32 `json:"downs"`
+	Ups int `json:"ups"`
+	Downs int `json:"downs"`
 	TotalAwardsReceived uint32 `json:"total_awards_received"`
 	Score uint32 `json:"score"`
 	SelftextHtml string `json:"selftext_html"`
@@ -161,10 +162,13 @@ func getWallStreetBets(params map[string]interface{}) []RedditChildNode {
 type WsbSummary struct {
 	Url string `json:"url"`
 	Title string `json:"title"`
+	Upvotes int `json:"upvotes"`
+	MatchingShorts []string `json:"matching_shorts"`
+	Text string `json:"text"`
 }
 
 type WsbStockResults struct {
-	MatchedShortUrls map[string][]WsbSummary `json:"matched_short_urls"`
+	MatchedShortUrls []WsbSummary `json:"matched_short_urls"`
 	AdditionalInterestingUrls []WsbSummary `json:"additional_interesting_urls"`
 	UnmatchedUrls []WsbSummary `json:"unmatched_urls"`
 }
@@ -179,7 +183,7 @@ func removeHtmlTags(redditHtmlText string) string {
 
 func findShortsInWSB(shortInterestData []ShortInterestData, wsbData []RedditChildNode) WsbStockResults {
 	result := WsbStockResults{
-		MatchedShortUrls: make(map[string][]WsbSummary),
+		MatchedShortUrls: make([]WsbSummary, 0),
 		UnmatchedUrls: make([]WsbSummary, 0),
 	}
 	matchingRegexes := getMatchingRegexes(shortInterestData)
@@ -187,15 +191,16 @@ func findShortsInWSB(shortInterestData []ShortInterestData, wsbData []RedditChil
 	for _, childNode := range wsbData {
 		atleastOne := false
 		childNodeData := childNode.Data
-		summary := WsbSummary{childNodeData.Url, childNodeData.Title}
+		summary := WsbSummary{childNodeData.Url, childNodeData.Title, childNodeData.Ups, make([]string, 0), childNodeData.Selftext}
 		for index, regex := range matchingRegexes {
-			shortInterestStock := shortInterestData[index]
 			if matchesRegex(regex, childNodeData) {
-				result.MatchedShortUrls[shortInterestStock.Symbol] = append(result.MatchedShortUrls[shortInterestStock.Symbol], summary)
+				summary.MatchingShorts = append(summary.MatchingShorts, shortInterestData[index].Symbol)
 				atleastOne = true
 			}
 		}
-		if !atleastOne {
+		if atleastOne {
+			result.MatchedShortUrls = append(result.MatchedShortUrls, summary)
+		} else {
 			if matchesRegex(interestingRegex, childNodeData) {
 				result.AdditionalInterestingUrls = append(result.AdditionalInterestingUrls, summary)
 			} else {
@@ -254,25 +259,35 @@ func getInterestingRedditRegex() *regexp.Regexp {
 		"🦍",
 		"🐵",
 		"💪",
+		"🤚🏾",
+		"✋🏾",
 	}
 	result := regexp.MustCompile(fmt.Sprintf(`(?i)(?:%s)`, strings.Join(interestingRedditWords, "|")))
 	return result
 }
 
 func aggregateListHtml(summaries []WsbSummary) string {
+	sort.Slice(summaries, func(i, j int) bool {
+		// reverse sort on length of matching shorts
+		var diff = summaries[i].Upvotes - summaries[j].Upvotes
+		return diff > 0
+	})
 	result := "<ul>\n"
-	for _, summary := range summaries {
-		result = result + fmt.Sprintf("<li><a href=\"%s\">%s</a></li>\n", summary.Url, summary.Title)
+	for _ , summary := range summaries {
+		postfix := fmt.Sprintf("<li><a href=\"%s\">%s</a>(Shorts: %s)(%d Upvotes)</li>\n",
+			summary.Url,
+			summary.Title,
+			strings.Join(summary.MatchingShorts,","),
+			summary.Upvotes,
+		)
+		result = result + postfix
 	}
 	result = result + "</ul>"
 	return result
 }
 
 func generateEmailHtml(params map[string]interface{}, results WsbStockResults) string {
-	result := "<h3>High Short Interest stock discussions</h3>\n"
-	for symbol, redditUrls := range results.MatchedShortUrls {
-		result = result + fmt.Sprintf("<h5>%s</h5>\n%s\n", symbol, aggregateListHtml(redditUrls))
-	}
+	result := fmt.Sprintf("<h3>High Short Interest stock discussions</h3>\n%s\n", aggregateListHtml(results.MatchedShortUrls))
 	result = result + fmt.Sprintf("<h3>Other interesting discussions</h3>\n%s\n", aggregateListHtml(results.AdditionalInterestingUrls))
 	result = result + fmt.Sprintf("<h3>Miscellaneous Discussion (Hopefully)</h3>\n%s\n", aggregateListHtml(results.UnmatchedUrls))
 	return result
