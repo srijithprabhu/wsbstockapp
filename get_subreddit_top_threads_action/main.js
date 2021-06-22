@@ -27,7 +27,7 @@ function getRedditThreads(params) {
                     "User-Agent": "MyAuthBot/0.0.1"
                 }
             }).then((response) => {
-                return response.body;
+                return response.data;
             });
         })
 }
