@@ -1,0 +1,15 @@
+# Manifest file to deploy the Get Reddit Threads Action onto IBM Cloud
+
+packages:
+  reddit:
+    version: 1.0
+    license: Apache-2.0
+    actions:
+      get-reddit-threads:
+        function: main.js
+        runtime: nodejs:12
+        inputs:
+          reddit_username: $REDDIT_USERNAME
+          reddit_password: $REDDIT_PASSWORD
+          reddit_client_id: $REDDIT_CLIENT_ID
+          reddit_secret: $REDDIT_SECRET

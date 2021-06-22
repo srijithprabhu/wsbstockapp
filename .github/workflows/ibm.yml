@@ -18,6 +18,10 @@ env:
   IBM_CLOUD_API_KEY: ${{ secrets.IBM_CLOUD_API_KEY }}
   IBM_CLOUD_ORG: ${{ secrets.IBM_CLOUD_ORG }}
   IBM_CLOUD_SPACE: ${{ secrets.IBM_CLOUD_SPACE }}
+  REDDIT_USERNAME: ${{ secrets.REDDIT_USERNAME }}
+  REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
+  REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+  REDDIT_SECRET: ${{ secrets.REDDIT_SECRET }}
 
 jobs:
   setup-deploy:
