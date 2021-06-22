@@ -147,6 +147,7 @@ type RedditChildDataNode struct {
 	Score uint32 `json:"score"`
 	SelftextHtml string `json:"selftext_html"`
 	Url string `json:"url"`
+	Permalink string `json:"permalink"`
 	Unknown map[string]interface{} `json:"-"`
 }
 
@@ -165,6 +166,7 @@ type WsbSummary struct {
 	Upvotes int `json:"upvotes"`
 	MatchingShorts []string `json:"matching_shorts"`
 	Text string `json:"text"`
+	Permalink string `json:"permalink"`
 }
 
 type WsbStockResults struct {
@@ -191,7 +193,7 @@ func findShortsInWSB(shortInterestData []ShortInterestData, wsbData []RedditChil
 	for _, childNode := range wsbData {
 		atleastOne := false
 		childNodeData := childNode.Data
-		summary := WsbSummary{childNodeData.Url, childNodeData.Title, childNodeData.Ups, make([]string, 0), childNodeData.Selftext}
+		summary := WsbSummary{childNodeData.Url, childNodeData.Title, childNodeData.Ups, make([]string, 0), childNodeData.Selftext, childNodeData.Permalink}
 		for index, regex := range matchingRegexes {
 			if matchesRegex(regex, childNodeData) {
 				summary.MatchingShorts = append(summary.MatchingShorts, shortInterestData[index].Symbol)
@@ -275,7 +277,7 @@ func aggregateListHtml(summaries []WsbSummary) string {
 	result := "<ul>\n"
 	for _ , summary := range summaries {
 		postfix := fmt.Sprintf("<li><a href=\"%s\">%s</a>(Shorts: %s)(%d Upvotes)</li>\n",
-			summary.Url,
+			fmt.Sprintf("https://www.reddit.com%s", summary.Permalink),
 			summary.Title,
 			strings.Join(summary.MatchingShorts,","),
 			summary.Upvotes,
