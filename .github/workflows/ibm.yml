@@ -9,8 +9,9 @@
 name: Deploy Actions to IBM Cloud
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
 
 # Environment variables available to all jobs and steps in this workflow
 env:
@@ -47,6 +48,7 @@ jobs:
         ibmcloud login --apikey "${IBM_CLOUD_API_KEY}" -o "${IBM_CLOUD_ORG}" -s "${IBM_CLOUD_SPACE}"
 
     # Deploy to Cloud Functions
-    - name: Deploy to Cloud Functions
+    - name: Deploy to Get Subreddit Top Threads to Cloud Functions
       run: |
-        echo "TODO"
+        ibmcloud fn deploy --manifest get_subreddit_top_threads_action/manifest.yml
+
