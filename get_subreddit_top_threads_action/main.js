@@ -38,7 +38,7 @@ function getRedditAuthorization(params) {
     let username = params["reddit_username"]
     let password = params["reddit_password"]
 
-    return axios.post(RedditAccessTokenEndpoint, {
+    return axios.post(RedditAccessTokenEndpoint, null,{
         params: {
             "grant_type": "password",
             username,
