@@ -18,6 +18,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
   IBM_CLOUD_API_KEY: ${{ secrets.IBM_CLOUD_API_KEY }}
   IBM_CLOUD_ORG: ${{ secrets.IBM_CLOUD_ORG }}
+  IBM_CLOUD_REGION: ${{ secrets.IBM_CLOUD_REGION }}
   IBM_CLOUD_SPACE: ${{ secrets.IBM_CLOUD_SPACE }}
   REDDIT_USERNAME: ${{ secrets.REDDIT_USERNAME }}
   REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
@@ -28,7 +29,7 @@ jobs:
   setup-deploy:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
-    environment: production
+    environment: Test Environment
     steps:
 
     - name: Checkout
@@ -45,7 +46,7 @@ jobs:
     # Authenticate with IBM Cloud CLI
     - name: Authenticate with IBM Cloud CLI
       run: |
-        ibmcloud login --apikey "${IBM_CLOUD_API_KEY}" -o "${IBM_CLOUD_ORG}" -s "${IBM_CLOUD_SPACE}"
+        ibmcloud login --apikey "${IBM_CLOUD_API_KEY}" -r "${IBM_CLOUD_REGION}" -o "${IBM_CLOUD_ORG}" -s "${IBM_CLOUD_SPACE}"
 
     # Deploy to Cloud Functions
     - name: Deploy to Get Subreddit Top Threads to Cloud Functions
