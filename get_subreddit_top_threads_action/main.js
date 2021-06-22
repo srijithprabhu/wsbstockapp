@@ -7,8 +7,7 @@
  * @return The output of this action, which must be a JSON object.
  *
  */
-const RedditAccessTokenEndpoint = "https://www.reddit.com/api/v1/access_token"
-const SubredditEndpointFormat = ""
+const RedditAccessTokenEndpoint = "https://www.reddit.com/api/v1/access_token";
 
 const axios = require("axios").default;
 
