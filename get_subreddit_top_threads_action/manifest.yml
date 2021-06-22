@@ -5,7 +5,7 @@ packages:
     version: 1.0
     license: Apache-2.0
     actions:
-      get-reddit-threads:
+      get-subreddit-top-threads:
         function: main.js
         runtime: nodejs:12
         inputs:
@@ -13,3 +13,5 @@ packages:
           reddit_password: $REDDIT_PASSWORD
           reddit_client_id: $REDDIT_CLIENT_ID
           reddit_secret: $REDDIT_SECRET
+          limit: 25
+          timespan: "day"
