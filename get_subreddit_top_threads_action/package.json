@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@cloudant/cloudant": "^4.4.0",
     "axios": "^0.21.1"
   }
 }

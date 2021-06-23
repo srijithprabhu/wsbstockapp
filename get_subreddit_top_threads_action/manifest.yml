@@ -13,6 +13,8 @@ packages:
           reddit_password: $REDDIT_PASSWORD
           reddit_client_id: $REDDIT_CLIENT_ID
           reddit_secret: $REDDIT_SECRET
+          cloudant_apikey: $CLOUDANT_WRITE_APIKEY
+          cloudant_url: $CLOUDANT_URL
           limit: 25
           timespan: "day"
           subreddit: "wallstreetbets"

@@ -9,6 +9,7 @@
  */
 const RedditAccessTokenEndpoint = "https://www.reddit.com/api/v1/access_token";
 
+const Cloudant = require("@cloudant/cloudant");
 const axios = require("axios").default;
 
 function getRedditThreads(params) {
@@ -57,6 +58,20 @@ function getRedditAuthorization(params) {
     });
 }
 
+function uploadRedditThread(data, params) {
+    const cloudant_url = params["cloudant_url"];
+    const cloudant_apikey = params["cloudant_apikey"];
+    const document_id = params["subreddit"];
+    const cloudant = Cloudant({url: cloudant_url, maxAttempt: 5, plugins: [{ iamauth: { iamApiKey: cloudant_apikey } }, { retry: { retryDelayMultiplier: 4 } }]});
+    const db = cloudant.use("reddit-threads");
+    const doc = db.get(document_id);
+    doc._id = document_id;
+    doc.thread = data;
+    return db.insert(doc);
+}
+
 function main(params) {
-    return getRedditThreads(params);
+    return getRedditThreads(params).then((data) => {
+        return uploadRedditThread(data, params);
+    });
 }
