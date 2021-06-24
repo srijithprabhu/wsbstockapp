@@ -39,7 +39,16 @@ jobs:
 
     # Download and Install IBM Cloud CLI
     - name: Setup IBM Cloud CLI
-      uses: setup/ibm-cloud@v1
+      run: |
+        curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+        ibmcloud --version
+        ibmcloud config --check-version=false
+        ibmcloud plugin install -f cloud-functions
+
+    # Authenticate with IBM Cloud CLI
+    - name: Authenticate with IBM Cloud CLI
+      run: |
+        ibmcloud login --apikey "${IBM_CLOUD_API_KEY}" -r "${IBM_CLOUD_REGION}" -o "${IBM_CLOUD_ORG}" -s "${IBM_CLOUD_SPACE}"
 
     # Deploy to Cloud Functions
     - name: Deploy to Get Subreddit Top Threads to Cloud Functions
