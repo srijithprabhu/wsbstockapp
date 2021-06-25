@@ -51,7 +51,8 @@ jobs:
         ibmcloud login --apikey "${IBM_CLOUD_API_KEY}" -r "${IBM_CLOUD_REGION}" -o "${IBM_CLOUD_ORG}" -s "${IBM_CLOUD_SPACE}"
 
     # Deploy to Cloud Functions
-    - name: Deploy to Get Subreddit Top Threads to Cloud Functions
+    - name: Deploy All Actions
       run: |
         ibmcloud fn deploy --manifest get_subreddit_top_threads_action/manifest.yml
+        ibmcloud fn deploy --manifest reduce_reddit_thread_action/manifest.yml
 
