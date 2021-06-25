@@ -24,6 +24,9 @@ packages:
       RedditThreadDbListener:
         feed: cloudant/changes
         inputs:
+          host: $CLOUDANT_HOSTNAME
+          iamApiKey: $CLOUDANT_WRITE_APIKEY
+          iamUrl: $CLOUD_IAM_URL
           dbname: "reddit-threads"
     sequences:
       process-reddit-thread-sequence:
