@@ -13,6 +13,13 @@ packages:
           cloudant_url: $CLOUDANT_URL
           subreddit: "wallstreetbets"
           destination_db: "reduce-threads"
+    dependencies:
+      cloudant:
+        location: /whisk.system/cloudant
+        inputs:
+          host: $CLOUDANT_HOSTNAME
+          iamApiKey: $CLOUDANT_WRITE_APIKEY
+          iamUrl: $CLOUD_IAM_URL
     triggers:
       RedditThreadDbListener:
         feed: /whisk.system/cloudant/changes
