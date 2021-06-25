@@ -14,8 +14,8 @@ packages:
           subreddit: "wallstreetbets"
           destination_db: "reduce-threads"
     dependencies:
-      openwhisk-cloudant:
-        location: /whisk.system/cloudant
+      cloudant:
+        location: whisk.system/cloudant
         inputs:
           username: $CLOUDANT_USERNAME
           password: $CLOUDANT_PASSWORD
@@ -23,7 +23,7 @@ packages:
           iamApiKey: $CLOUDANT_WRITE_APIKEY
     triggers:
       RedditThreadDbListener:
-        feed: openwhisk-cloudant/changes
+        feed: cloudant/changes
         inputs:
           dbname: "reddit-threads"
     sequences:
