@@ -27,7 +27,7 @@ packages:
           dbname: "reddit-threads"
     sequences:
       process-reddit-thread-sequence:
-        actions: openwhisk-cloudant/read, reduce-reddit-thread-action
+        actions: cloudant/read, reduce-reddit-thread-action
     rules:
       RedditThreadDbRule:
         trigger: RedditThreadDbListener
