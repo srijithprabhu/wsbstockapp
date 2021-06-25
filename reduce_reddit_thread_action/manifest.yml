@@ -21,10 +21,7 @@ packages:
           iamApiKey: $CLOUDANT_WRITE_APIKEY
           iamUrl: $CLOUD_IAM_URL
           dbname: "reddit-threads"
-    sequences:
-      process-reddit-thread-sequence:
-        actions: /whisk.system/cloudant/read, reduce-reddit-thread-action
     rules:
       RedditThreadDbRule:
         trigger: RedditThreadDbListener
-        action: process-reddit-thread-sequence
+        action: reduce-reddit-thread-action
