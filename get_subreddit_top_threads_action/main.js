@@ -63,7 +63,7 @@ function uploadRedditThread(data, params) {
     const cloudant_apikey = params["cloudant_apikey"];
     const document_id = params["subreddit"];
     const cloudant = Cloudant({url: cloudant_url, maxAttempt: 5, plugins: [{ iamauth: { iamApiKey: cloudant_apikey } }, { retry: { retryDelayMultiplier: 4 } }]});
-    const db = cloudant.use("reddit-threads");
+    const db = cloudant.use(params["dbname"]);
     return db.get(document_id).catch((err) => {
         console.log(err);
     }).then((doc) => {

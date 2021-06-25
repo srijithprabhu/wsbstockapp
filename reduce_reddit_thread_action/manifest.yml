@@ -1,0 +1,35 @@
+# Manifest file to deploy the Get Reddit Threads Action onto IBM Cloud
+
+packages:
+  reddit:
+    version: 1.0
+    license: Apache-2.0
+    actions:
+      reduce-reddit-thread-action:
+        function: main.js
+        runtime: nodejs:12
+        inputs:
+          cloudant_apikey: $CLOUDANT_WRITE_APIKEY
+          cloudant_url: $CLOUDANT_URL
+          subreddit: "wallstreetbets"
+          destination_db: "reduce-threads"
+    dependencies:
+      openwhisk-cloudant:
+        location: /whisk.system/cloudant
+        inputs:
+          username: $CLOUDANT_USERNAME
+          password: $CLOUDANT_PASSWORD
+          host: $CLOUDANT_HOSTNAME
+          iamApiKey: $CLOUDANT_WRITE_APIKEY
+    triggers:
+      RedditThreadDbListener:
+        feed: openwhisk-cloudant/changes
+        inputs:
+          dbname: "reddit-threads"
+    sequences:
+      process-reddit-thread-sequence:
+        actions: openwhisk-cloudant/read, reduce-reddit-thread-action
+    rules:
+      RedditThreadDbRule:
+        trigger: RedditThreadDbListener
+        action: process-reddit-thread-sequence

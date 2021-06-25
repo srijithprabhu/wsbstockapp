@@ -15,6 +15,7 @@ packages:
           reddit_secret: $REDDIT_SECRET
           cloudant_apikey: $CLOUDANT_WRITE_APIKEY
           cloudant_url: $CLOUDANT_URL
+          dbname: "reddit-threads"
           limit: 25
           timespan: "day"
           subreddit: "wallstreetbets"
