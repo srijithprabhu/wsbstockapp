@@ -11,17 +11,4 @@ packages:
         inputs:
           cloudant_apikey: $CLOUDANT_WRITE_APIKEY
           cloudant_url: $CLOUDANT_URL
-          subreddit: "wallstreetbets"
           destination_db: "reduce-threads"
-    triggers:
-      RedditThreadDbListener:
-        feed: /whisk.system/cloudant/changes
-        inputs:
-          host: $CLOUDANT_HOSTNAME
-          iamApiKey: $CLOUDANT_WRITE_APIKEY
-          iamUrl: $CLOUD_IAM_URL
-          dbname: "reddit-threads"
-    rules:
-      RedditThreadDbRule:
-        trigger: RedditThreadDbListener
-        action: reduce-reddit-thread-action
