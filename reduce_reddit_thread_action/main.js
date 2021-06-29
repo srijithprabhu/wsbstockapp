@@ -14,7 +14,7 @@ function updateDestinationRedditThread(elements, params) {
         if (!doc) {
             doc = {}
         }
-        doc._id = element_id;
+        doc._id = doc_id;
         doc.threads = elements;
         return db.insert(doc);
     });
