@@ -33,7 +33,7 @@ function readSourceRedditThread(params) {
 
 function reduceRedditThread(childThread) {
     let result = {};
-    let data = child.data;
+    let data = childThread.data;
 
     result.title = data.title;
     result.text = data.selftext;
