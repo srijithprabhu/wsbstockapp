@@ -52,10 +52,6 @@ function reduceRedditThreads(thread) {
 }
 
 function main(params) {
-    const destination_dbname = params["destination_db"];
-    const source_dbname = params["dbname"];
-    const source_db = cloudant.use(db_name);
-    const source_id = params["id"];
     return readSourceRedditThread(params)
         .then((thread) => {
             return reduceRedditThreads(thread);
