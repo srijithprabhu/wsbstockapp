@@ -43,10 +43,10 @@ jobs:
     - name: IBM Cloud Login
       uses: srijithprabhu/login-ibm-cloud@v0
       with:
-        ibm-cloud-api-key: ${IBM_CLOUD_API_KEY}
-        ibm-cloud-region: ${IBM_CLOUD_REGION}
-        ibm-cloud-org: ${IBM_CLOUD_ORG}
-        ibm-cloud-space:  ${IBM_CLOUD_SPACE}
+        ibm-cloud-api-key: ${{ env.IBM_CLOUD_API_KEY }}
+        ibm-cloud-region: ${{ env.IBM_CLOUD_REGION }}
+        ibm-cloud-org: ${{ env.IBM_CLOUD_ORG }}
+        ibm-cloud-space:  ${{ env.IBM_CLOUD_SPACE }}
 
     # Deploy to Cloud Functions
     - name: Deploy Top Threads Action
@@ -66,10 +66,10 @@ jobs:
       - name: IBM Cloud Login
         uses: srijithprabhu/login-ibm-cloud@v0
         with:
-          ibm-cloud-api-key: ${IBM_CLOUD_API_KEY}
-          ibm-cloud-region: ${IBM_CLOUD_REGION}
-          ibm-cloud-org: ${IBM_CLOUD_ORG}
-          ibm-cloud-space: ${IBM_CLOUD_SPACE}
+          ibm-cloud-api-key: ${{ env.IBM_CLOUD_API_KEY }}
+          ibm-cloud-region: ${{ env.IBM_CLOUD_REGION }}
+          ibm-cloud-org: ${{ env.IBM_CLOUD_ORG }}
+          ibm-cloud-space: ${{ env.IBM_CLOUD_SPACE }}
 
       # Deploy to Cloud Functions
       - name: Deploy Reduce Thread Action
