@@ -30,8 +30,8 @@ env:
   REDDIT_SECRET: ${{ secrets.REDDIT_SECRET }}
 
 jobs:
-  setup-deploy:
-    name: Setup, Build, Publish, and Deploy
+  deploy-top-threads-action:
+    name: Deploy Reddit Top Threads action
     runs-on: ubuntu-latest
     environment: Test Environment
     steps:
@@ -39,22 +39,40 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    # Download and Install IBM Cloud CLI
-    - name: Setup IBM Cloud CLI
-      run: |
-        curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
-        ibmcloud --version
-        ibmcloud config --check-version=false
-        ibmcloud plugin install -f cloud-functions
-
-    # Authenticate with IBM Cloud CLI
-    - name: Authenticate with IBM Cloud CLI
-      run: |
-        ibmcloud login --apikey "${IBM_CLOUD_API_KEY}" -r "${IBM_CLOUD_REGION}" -o "${IBM_CLOUD_ORG}" -s "${IBM_CLOUD_SPACE}"
+    # Log into IBM Cloud
+    - name: IBM Cloud Login
+      uses: actions/ibm-cloud-login@v0
+      with:
+        ibm-cloud-api-key: ${IBM_CLOUD_API_KEY}
+        ibm-cloud-region: ${IBM_CLOUD_REGION}
+        ibm-cloud-org: ${IBM_CLOUD_ORG}
+        ibm-cloud-space:  ${IBM_CLOUD_SPACE}
 
     # Deploy to Cloud Functions
-    - name: Deploy All Actions
+    - name: Deploy Top Threads Action
       run: |
         ibmcloud fn deploy --manifest get_subreddit_top_threads_action/manifest.yml
-        ibmcloud fn deploy --manifest reduce_reddit_thread_action/manifest.yml
+
+  deploy-reduce-thread-action:
+    name: Deploy Reduce Thread Action
+    runs-on: ubuntu-latest
+    environment: Test Environment
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Log into IBM Cloud
+      - name: IBM Cloud Login
+        uses: actions/ibm-cloud-login@v0
+        with:
+          ibm-cloud-api-key: ${IBM_CLOUD_API_KEY}
+          ibm-cloud-region: ${IBM_CLOUD_REGION}
+          ibm-cloud-org: ${IBM_CLOUD_ORG}
+          ibm-cloud-space: ${IBM_CLOUD_SPACE}
+
+      # Deploy to Cloud Functions
+      - name: Deploy Reduce Thread Action
+        run: |
+          ibmcloud fn deploy --manifest reduce_reddit_thread_action/manifest.yml
 
