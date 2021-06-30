@@ -41,7 +41,7 @@ jobs:
 
     # Log into IBM Cloud
     - name: IBM Cloud Login
-      uses: srijithprabhu/ibm-cloud-login@v0
+      uses: srijithprabhu/login-ibm-cloud@v0
       with:
         ibm-cloud-api-key: ${IBM_CLOUD_API_KEY}
         ibm-cloud-region: ${IBM_CLOUD_REGION}
@@ -64,7 +64,7 @@ jobs:
 
       # Log into IBM Cloud
       - name: IBM Cloud Login
-        uses: srijithprabhu/ibm-cloud-login@v0
+        uses: srijithprabhu/login-ibm-cloud@v0
         with:
           ibm-cloud-api-key: ${IBM_CLOUD_API_KEY}
           ibm-cloud-region: ${IBM_CLOUD_REGION}
