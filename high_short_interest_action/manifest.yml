@@ -1,0 +1,13 @@
+packages:
+  reddit:
+    version: 1.0
+    license: Apache-2.0
+      actions:
+        get-high-short-interest:
+          function: main.js
+          runtime: nodejs:12
+          inputs:
+            cloudant_apikey: $CLOUDANT_WRITE_APIKEY
+            cloudant_url: $CLOUDANT_URL
+            dbname: "external-data-sources"
+            document_id: "high-short-interest"

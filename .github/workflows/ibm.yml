@@ -76,3 +76,25 @@ jobs:
         run: |
           ibmcloud fn deploy --manifest reduce_reddit_thread_action/manifest.yml
 
+  deploy-high-short-interest-action:
+    name: Deploy High Short Interest Action
+    runs-on: ubuntu-latest
+    environment: Test Environment
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Log into IBM Cloud
+      - name: IBM Cloud Login
+        uses: srijithprabhu/login-ibm-cloud@v0
+        with:
+          ibm-cloud-api-key: ${{ env.IBM_CLOUD_API_KEY }}
+          ibm-cloud-region: ${{ env.IBM_CLOUD_REGION }}
+          ibm-cloud-org: ${{ env.IBM_CLOUD_ORG }}
+          ibm-cloud-space: ${{ env.IBM_CLOUD_SPACE }}
+
+      # Deploy to Cloud Functions
+      - name: Deploy Reduce Thread Action
+        run: |
+          ibmcloud fn deploy --manifest high_short_interest_action/manifest.yml
