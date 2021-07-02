@@ -95,6 +95,6 @@ jobs:
           ibm-cloud-space: ${{ env.IBM_CLOUD_SPACE }}
 
       # Deploy to Cloud Functions
-      - name: Deploy Reduce Thread Action
+      - name: Deploy HIgh Short Interest action
         run: |
           ibmcloud fn deploy --manifest high_short_interest_action/manifest.yml
