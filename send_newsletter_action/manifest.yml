@@ -9,4 +9,8 @@ packages:
         inputs:
           cloudant_apikey: $CLOUDANT_READ_APIKEY
           cloudant_url: $CLOUDANT_URL
+          email_address: $EMAIL_ADDRESS
+          email_password: $EMAIL_PASSWORD
+          email_smtp_host: $EMAIL_SMTP_HOST
+          email_smtp_port: $EMAIL_SMTP_PORT
           dbname: "reduce-threads"
