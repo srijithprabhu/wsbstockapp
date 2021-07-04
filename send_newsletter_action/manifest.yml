@@ -1,0 +1,12 @@
+packages:
+  reddit:
+    version: 1.0
+    license: Apache-2.0
+    actions:
+      send-newsletter-action:
+        function: main.js
+        runtime: nodejs:12
+        inputs:
+          cloudant_apikey: $CLOUDANT_READ_APIKEY
+          cloudant_url: $CLOUDANT_URL
+          dbname: "reduce-threads"
