@@ -11,8 +11,9 @@ function getAllSubredditThreads(params) {
     return db.list({include_docs: true}).then((response) => {
         let results = response.rows;
         return results.reduce((result, row) => {
-            const subreddit = row._id;
-            const threads = row.threads;
+            const doc = row.doc
+            const subreddit = doc._id;
+            const threads = doc.threads;
             result[subreddit] = threads;
             return result;
         }, {});
