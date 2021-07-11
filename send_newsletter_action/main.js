@@ -143,7 +143,7 @@ function getAllSubredditThreadsAndShorts(params) {
 }
 
 function main(params) {
-    return getAllSubredditThreads(params)
+    return getAllSubredditThreadsAndShorts(params)
         .then((subreddit_threads) => {
             subreddit_threads.sort((a, b) => {
                 return b.upvotes - a.upvotes;
