@@ -14,3 +14,5 @@ packages:
           email_smtp_host: $EMAIL_SMTP_HOST
           email_smtp_port: $EMAIL_SMTP_PORT
           dbname: "reduce-threads"
+          short_interest_dbname: "external-data-sources"
+          short_interest_document_id: "high-short-interest"

@@ -70,7 +70,7 @@ function generateRedditThreadFilter(subreddit_filter_specs) {
 const MUSTACHE_TEMPLATE = "Good Morning {{ name }}, here are the threads I found today:" +
     "<ul>" +
     "{{#threads}}" +
-    "<li><a href={{url}}>{{title}}</a>(Subreddit/Flair: {{subreddit}}/{{link_flair}})(Upvotes: {{upvotes}})</li>" +
+    "<li><a href={{url}}>{{title}}</a>(Shorts: {{shorts}})(Subreddit/Flair: {{subreddit}}/{{link_flair}})(Upvotes: {{upvotes}})</li>" +
     "{{/threads}}" +
     "</ul>";
 
@@ -95,6 +95,51 @@ function createAndSendNewsletters(threads, params) {
         });
     });
     return Promise.all(sentEmails);
+}
+
+function getHighShortInterestData(params) {
+    const cloudant_url = params["cloudant_url"];
+    const cloudant_apikey = params["cloudant_apikey"];
+    const document_id = params["short_interest_document_id"]
+    const cloudant = Cloudant({url: cloudant_url, maxAttempt: 5, plugins: [{ iamauth: { iamApiKey: cloudant_apikey } }, { retry: { retryDelayMultiplier: 4 } }]});
+    const db = cloudant.use(params["short_interest_dbname"]);
+    return db.get(document_id).then((doc) => {
+        return doc.data;
+    });
+}
+
+function getListOfRegexes(high_interest_shorts) {
+    return high_interest_shorts.map((high_interest_short) => {
+       return new RegExp(`(?:${high_interest_short.symbol}|${high_interest_short.name})`, "i");
+    });
+}
+
+function threadMatchesRegex(thread, regex) {
+    return regex.test(thread.title) || regex.test(thread.text);
+}
+
+function populateShortsForRedditThreads(threads, shorts) {
+    const regexes = getListOfRegexes(shorts)
+    return threads.forEach((thread) => {
+        thread.shorts = regexes.reduce((accumulator, regex, index) => {
+            if (threadMatchesRegex(thread,regex)) {
+                accumulator.push(shorts[index].symbol)
+            }
+            return accumulator;
+        }, []).join(", ");
+    })
+}
+
+function getAllSubredditThreadsAndShorts(params) {
+    return Promise.all([
+        getAllSubredditThreads(params),
+        getHighShortInterestData(params)
+    ]).then((results) => {
+        const subreddit_threads = results[0];
+        const high_interest_shorts = results[1];
+        populateShortsForRedditThreads(subreddit_threads, high_interest_shorts);
+        return subreddit_threads;
+    })
 }
 
 function main(params) {
