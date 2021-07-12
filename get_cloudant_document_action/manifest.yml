@@ -3,7 +3,7 @@ packages:
     version: 1.0
     license: Apache-2.0
     actions:
-      send-newsletter-action:
+      get-cloudant-document-action:
         function: main.js
         runtime: nodejs:12
         inputs:
