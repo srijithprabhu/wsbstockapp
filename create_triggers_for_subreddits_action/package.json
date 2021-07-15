@@ -1,0 +1,14 @@
+{
+  "name": "create_triggers_for_subreddits_action",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "openwhisk": "^3.21.4"
+  }
+}
