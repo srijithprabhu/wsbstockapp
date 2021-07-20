@@ -21,7 +21,7 @@ function logPromise(prefix, promise) {
 }
 
 function setupSubredditTriggersAndRules(subreddits, whisk) {
-    let startTime = Date.UTC(2021, 7, 16, 12, 0, 0);
+    let startTime = new Date(Date.UTC(2021, 7, 16, 12, 0, 0));
     const namespace = "subreddit";
     const actionName = "get-subreddit-top-threads";
     let triggers = subreddits.map((subreddit) => {
