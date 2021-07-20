@@ -7,8 +7,8 @@ function getListOfSubreddits(users) {
     let resultMap = {};
     users.forEach((user) => {
         const subreddits = user["subreddits"];
-        subreddits.forEach((subreddit) => {
-            resultMap[subreddit.toLowerCase()] = true;
+        subreddits.forEach((data) => {
+            resultMap[data.subreddit.toLowerCase()] = true;
         })
     })
     return Object.keys(resultMap);
