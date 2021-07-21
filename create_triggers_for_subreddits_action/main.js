@@ -30,8 +30,7 @@ function createTrigger(actionName, startTime, payload, whisk) {
         wsbOrigin: true
     };
     return createOrUpdate(whisk.triggers,{
-        name: triggerName,
-        trigger: payload,
+        triggerName: triggerName,
         annotations: annotations
     }).then((trigger) => {
         return Promise.all([
@@ -41,7 +40,7 @@ function createTrigger(actionName, startTime, payload, whisk) {
                 params: feedParams
             }),
             createOrUpdate(whisk.rules, {
-                name: ruleName,
+                ruleName: ruleName,
                 action: actionName,
                 trigger: triggerName,
                 annotations: annotations
