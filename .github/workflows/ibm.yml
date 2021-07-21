@@ -29,6 +29,8 @@ env:
   CLOUDANT_URL: ${{ secrets.CLOUDANT_URL }}
   CLOUDANT_HOSTNAME: $${{ secrets.CLOUDANT_HOSTNAME }}
   CLOUD_IAM_URL: $${{ secrets.CLOUD_IAM_URL }}
+  WHISK_APIKEY: ${{ secrets.WHISK_APIKEY }}
+  WHISK_HOST: ${{ secrets.WHISK_HOST }}
   REDDIT_USERNAME: ${{ secrets.REDDIT_USERNAME }}
   REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
   REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}

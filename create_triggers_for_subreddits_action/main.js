@@ -69,6 +69,6 @@ function main(params) {
     }
 
     const subreddits = getListOfSubreddits(params["users"]);
-    const whisk = Openwhisk();
+    const whisk = Openwhisk({apihost: params["whisk_host"], api_key: params["whisk_apikey"]});
     return setupSubredditTriggersAndRules(subreddits, whisk);
 }

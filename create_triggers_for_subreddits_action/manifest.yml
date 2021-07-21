@@ -6,3 +6,6 @@ packages:
       create-triggers-for-subreddits-action:
         function: main.js
         runtime: nodejs:12
+        inputs:
+          whisk_apikey: $WHISK_APIKEY
+          whisk_host: $WHISK_HOST
