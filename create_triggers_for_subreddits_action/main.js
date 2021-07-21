@@ -58,7 +58,7 @@ function setupSubredditTriggersAndRules(subreddits, whisk) {
         const payload = {subreddit: subreddit};
         const trigger = createTrigger(actionName, startTime, payload, whisk);
         const nextMinute = startTime.getUTCMinutes() + 1;
-        const nextHour = startTime.getUTCHours + Math.floor(nextMinute/60);
+        const nextHour = startTime.getUTCHours() + Math.floor(nextMinute/60);
         startTime.setUTCMinutes(nextMinute % 60);
         startTime.setUTCHours(nextHour);
         return trigger;
