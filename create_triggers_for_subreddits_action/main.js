@@ -23,7 +23,7 @@ function createOrUpdate(whiskResource, options) {
 function setupSubredditTriggersAndRules(subreddits, whisk) {
     let startTime = new Date(Date.UTC(2021, 7, 16, 12, 0, 0));
     const package = "subreddit";
-    const actionName = "get-subreddit-top-threads";
+    const actionName = `${package}/get-subreddit-top-threads`;
     let triggers = subreddits.map((subreddit) => {
         const cronTab = `${startTime.getUTCMinutes()} ${startTime.getUTCHours()} * * *`;
         const feedParams = {cron:cronTab, trigger_payload: {subreddit}};
