@@ -16,6 +16,7 @@ function getListOfSubreddits(users) {
 function createOrUpdate(whiskResource, options) {
     return whiskResource.create(options)
         .catch((error) => {
+            console.log(error);
             return whiskResource.update(options);
         })
 }
@@ -28,24 +29,24 @@ function createTrigger(actionName, startTime, payload, whisk) {
     const annotations = {
         wsbOrigin: true
     };
-    const triggerOptions = {
-        feed: WHISK_ALARM_FEED_PATH,
-        params: {
-            cron: cronTab,
-            trigger_payload: payload
-        }
-    }
     return createOrUpdate(whisk.triggers,{
         name: triggerName,
-        trigger: triggerOptions,
+        trigger: payload,
         annotations: annotations
     }).then((trigger) => {
-        return createOrUpdate(whisk.rules, {
-            name: ruleName,
-            action: actionName,
-            trigger: triggerName,
-            annotations: annotations
-        });
+        return Promise.all([
+            createOrUpdate(whisk.feeds,{
+                feedName: WHISK_ALARM_FEED_PATH,
+                trigger: triggerName,
+                params: feedParams
+            }),
+            createOrUpdate(whisk.rules, {
+                name: ruleName,
+                action: actionName,
+                trigger: triggerName,
+                annotations: annotations
+            })
+        ]);
     });
 }
 
