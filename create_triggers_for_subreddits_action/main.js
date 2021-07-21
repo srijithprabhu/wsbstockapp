@@ -13,16 +13,10 @@ function getListOfSubreddits(users) {
     return Object.keys(resultMap);
 }
 
-function logPromise(prefix, promise) {
-    return promise.then((result) => {
-        console.log(`${prefix}: ${JSON.stringify(result)}`);
-    })
-}
-
 function createOrUpdate(whiskResource, options) {
-    return whiskResource.update(options)
+    return whiskResource.create(options)
         .catch((error) => {
-            return whiskResource.create(options);
+            return whiskResource.update(options);
         })
 }
 
