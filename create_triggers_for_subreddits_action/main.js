@@ -19,6 +19,13 @@ function logPromise(prefix, promise) {
     })
 }
 
+function createOrUpdate(whiskResource, options) {
+    return whiskResource.update(options)
+        .catch((error) => {
+            return whiskResource.create(options);
+        })
+}
+
 function setupSubredditTriggersAndRules(subreddits, whisk) {
     let startTime = new Date(Date.UTC(2021, 7, 16, 12, 0, 0));
     const package = "subreddit";
@@ -37,18 +44,18 @@ function setupSubredditTriggersAndRules(subreddits, whisk) {
         const annotations = {
             wsbOrigin: true
         };
-        return whisk.triggers.update({
+        return createOrUpdate(whisk.triggers,{
             name: triggerName,
             trigger: payload,
             annotations: annotations
         }).then((trigger) => {
             return Promise.all([
-                whisk.feeds.update({
+                createOrUpdate(whisk.feeds,{
                     feedName: WHISK_ALARM_FEED_PATH,
                     trigger: triggerName,
                     params: feedParams
                 }),
-                whisk.rules.update({
+                createOrUpdate(whisk.rules, {
                     name: ruleName,
                     action: actionName,
                     trigger: triggerName,
