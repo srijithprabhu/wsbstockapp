@@ -27,9 +27,9 @@ function setupSubredditTriggersAndRules(subreddits, whisk) {
     let triggers = subreddits.map((subreddit) => {
         const cronTab = `${startTime.getUTCMinutes()} ${startTime.getUTCHours()} * * *`;
         const feedParams = {cron:cronTab, trigger_payload: {subreddit}};
-        const triggerName = `${package}/subreddit-caller-trigger-${startTime.getUTCHours()}-${startTime.getUTCMinutes()}`;
-        const ruleName = `${package}/subreddit-caller-rule-${startTime.getUTCHours()}-${startTime.getUTCMinutes()}`;
-        const feedName = `${package}/subreddit-caller-feed-${startTime.getUTCHours()}-${startTime.getUTCMinutes()}`;
+        const triggerName = `subreddit-caller-trigger-${startTime.getUTCHours()}-${startTime.getUTCMinutes()}`;
+        const ruleName = `subreddit-caller-rule-${startTime.getUTCHours()}-${startTime.getUTCMinutes()}`;
+        const feedName = `subreddit-caller-feed-${startTime.getUTCHours()}-${startTime.getUTCMinutes()}`;
         const nextMinute = startTime.getUTCMinutes() + 1;
         const nextHour = startTime.getUTCHours + Math.floor(nextMinute/60);
         startTime.setUTCMinutes(nextMinute % 60);
