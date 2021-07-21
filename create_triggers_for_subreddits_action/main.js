@@ -28,24 +28,24 @@ function createTrigger(actionName, startTime, payload, whisk) {
     const annotations = {
         wsbOrigin: true
     };
+    const triggerOptions = {
+        feed: WHISK_ALARM_FEED_PATH,
+        params: {
+            cron: cronTab,
+            trigger_payload: payload
+        }
+    }
     return createOrUpdate(whisk.triggers,{
         name: triggerName,
-        trigger: payload,
+        trigger: triggerOptions,
         annotations: annotations
     }).then((trigger) => {
-        return Promise.all([
-            createOrUpdate(whisk.feeds,{
-                feedName: WHISK_ALARM_FEED_PATH,
-                trigger: triggerName,
-                params: feedParams
-            }),
-            createOrUpdate(whisk.rules, {
-                name: ruleName,
-                action: actionName,
-                trigger: triggerName,
-                annotations: annotations
-            })
-        ]);
+        return createOrUpdate(whisk.rules, {
+            name: ruleName,
+            action: actionName,
+            trigger: triggerName,
+            annotations: annotations
+        });
     });
 }
 
