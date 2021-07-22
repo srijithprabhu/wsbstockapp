@@ -110,7 +110,7 @@ function getHighShortInterestData(params) {
 
 function getListOfRegexes(high_interest_shorts) {
     return high_interest_shorts.map((high_interest_short) => {
-       return new RegExp(`(?:${high_interest_short.symbol}|${high_interest_short.name})`, "i");
+       return new RegExp(`(?:\b${high_interest_short.symbol}|${high_interest_short.name}\b)`, "i");
     });
 }
 
