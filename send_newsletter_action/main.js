@@ -67,7 +67,7 @@ function generateRedditThreadFilter(subreddit_filter_specs) {
     }
 }
 
-const MUSTACHE_TEMPLATE = "Good Morning {{ name }}, here are the threads I found today:" +
+const MUSTACHE_TEMPLATE = "Good Morning {{ name }},<br/>here are the threads I found today:" +
     "<ul>" +
     "{{#threads}}" +
     "<li><a href={{url}}>{{title}}</a>(Shorts: {{shorts}})(Subreddit/Flair: {{subreddit}}/{{link_flair}})(Upvotes: {{upvotes}})</li>" +
