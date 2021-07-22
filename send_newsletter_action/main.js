@@ -3,7 +3,7 @@ const Mustache = require("mustache");
 const nodemailer = require("nodemailer");
 
 const EMAIL_USER_POSTFIX = "+wallstreetbets";
-const EMAIL_REGEX = /([^@]+)(@.+)/g;
+const EMAIL_REGEX = /([^@]+)(@.+)/;
 
 function getAllSubredditThreads(params) {
     const cloudant_url = params["cloudant_url"];
