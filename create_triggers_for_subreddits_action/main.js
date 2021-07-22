@@ -53,7 +53,7 @@ function setupSubredditTriggersAndRules(subreddits, whisk) {
     let startTime = new Date(Date.UTC(2021, 7, 16, 12, 0, 0));
     const package = "reddit";
     const actionName = `${package}/get-subreddit-top-threads`;
-    const newsletterActionName = `${package}/send-newsletter-action`;
+    const newsletterActionName = `${package}/get-users-and-send-newsletter-sequence`;
     let triggers = subreddits.map((subreddit) => {
         const payload = {subreddit: subreddit};
         const trigger = createTrigger(actionName, startTime, payload, whisk);
@@ -64,7 +64,10 @@ function setupSubredditTriggersAndRules(subreddits, whisk) {
         return trigger;
     });
     return Promise.all(triggers).then((results) => {
-        return createTrigger(newsletterActionName, startTime, {}, whisk);
+        return createTrigger(newsletterActionName, startTime, {
+            dbname: "reddit-users",
+            id: "recipients"
+        }, whisk);
     });
 }
 

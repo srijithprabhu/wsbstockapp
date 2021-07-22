@@ -84,9 +84,6 @@ function createAndSendNewsletters(threads, params) {
     const date = new Date();
     const sentEmails = users.map((user) => {
         const to_email = generateToEmailAddress(user.email);
-        console.log(user.email);
-        console.log(to_email);
-        console.log(params['email_address']);
         const filter = generateRedditThreadFilter(user.subreddits);
         const newsletter_threads = threads.filter(filter);
         const newsletter_body = generateNewsletterBody(user.name, newsletter_threads);
@@ -152,5 +149,9 @@ function main(params) {
                 return b.upvotes - a.upvotes;
             })
             return createAndSendNewsletters(subreddit_threads, params);
+        }).then(() => {
+            return {
+                success: true
+            }
         })
 }
