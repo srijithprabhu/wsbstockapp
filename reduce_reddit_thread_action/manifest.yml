@@ -11,4 +11,5 @@ packages:
         inputs:
           cloudant_apikey: $CLOUDANT_WRITE_APIKEY
           cloudant_url: $CLOUDANT_URL
+          dbname: "reddit-threads"
           destination_db: "reduce-threads"

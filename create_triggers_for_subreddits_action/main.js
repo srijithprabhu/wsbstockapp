@@ -52,7 +52,7 @@ function createTrigger(actionName, startTime, payload, whisk) {
 function setupSubredditTriggersAndRules(subreddits, whisk) {
     let startTime = new Date(Date.UTC(2021, 7, 16, 12, 0, 0));
     const package = "reddit";
-    const actionName = `${package}/get-subreddit-top-threads`;
+    const actionName = `${package}/populate-subreddit-threads-sequence`;
     const newsletterActionName = `${package}/get-users-and-send-newsletter-sequence`;
     let triggers = subreddits.map((subreddit) => {
         const payload = {subreddit: subreddit};
