@@ -57,7 +57,7 @@ function main(params) {
             return reduceRedditThreads(thread);
         }).then((reducedThread) => {
             return updateDestinationRedditThread(reducedThread, params).then((data) => {
-                return reducedThread;
+                return data;
             });
         })
 }
