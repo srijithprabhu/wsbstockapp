@@ -2,7 +2,7 @@ const Cloudant = require("@cloudant/cloudant");
 const Mustache = require("mustache");
 const nodemailer = require("nodemailer");
 
-const EMAIL_USER_POSTFIX = "+wallstreetbets";
+const EMAIL_USER_POSTFIX = ""; // "+wallstreetbets";
 const EMAIL_REGEX = /([^@]+)(@.+)/;
 
 function getAllSubredditThreads(params) {
